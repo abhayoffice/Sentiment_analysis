@@ -1,0 +1,13 @@
+transformers
+pandas
+numpy
+seaborn
+matplotlib
+flask
+flask_cors
+python-multipart
+python-dotenv
+spacy
+nltk
+textblob
+scikit-learn
