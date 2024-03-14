@@ -192,9 +192,11 @@ def get_positive_negative_words(data):
     }
 
 def get_tone_of_conversation(positive_percentage, negative_percentage, neutral_percentage):
-    if positive_percentage > 50:
+    max_percentage = max(positive_percentage, negative_percentage, neutral_percentage)
+
+    if max_percentage == positive_percentage:
         return "Positive"
-    elif negative_percentage > 50:
+    elif max_percentage == negative_percentage:
         return "Negative"
     else:
         return "Neutral"
