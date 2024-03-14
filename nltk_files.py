@@ -13,8 +13,8 @@ import spacy
 from spacy.lang.en.stop_words import STOP_WORDS
 from string import punctuation
 
-def getPolarity(text):
 
+def getPolarity(text):
   return TextBlob(text).sentiment.polarity
 
 
@@ -79,6 +79,31 @@ def get_positive_and_negative_percentage(data):
             "negative":negative_percentage_rounded}
 
 
-def get_positive_negative_words():
+def get_positive_negative_words(data):
+    lemmatizer = WordNetLemmatizer()
+    nltk.download('stopwords')
+    all_stopwords = set(stopwords.words('english'))
+    all_stopwords.remove('not')
 
-    pass
+    corpus_positive = []
+    corpus_negative = []
+
+    for review in data['review']:
+        review = re.sub(r'[^A-Za-z]', ' ', review)
+        review = review.lower()
+        review = review.split()
+        review = [lemmatizer.lemmatize(word) for word in review if word not in all_stopwords]
+
+        for word in review:
+            if TextBlob(word).sentiment.polarity > 0:
+                corpus_positive.append(word)
+            elif TextBlob(word).sentiment.polarity < 0:
+                corpus_negative.append(word)
+
+    positive_word_freq = nltk.FreqDist(corpus_positive)
+    negative_word_freq = nltk.FreqDist(corpus_negative)
+
+    return {
+        "positive_words": positive_word_freq.most_common(10),
+        "negative_words": negative_word_freq.most_common(10)
+    }
