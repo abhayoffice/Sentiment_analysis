@@ -92,7 +92,7 @@ def convert_the_text_file(file):
         print(f"Error occurred: {e}")
         return None
 
-def get_positive_and_negative_percentage(data):
+def get_positive_negative_neutral_percentage(data):
 
 
     condition = data['Polarity'] > 0
@@ -101,16 +101,24 @@ def get_positive_and_negative_percentage(data):
     condition = data['Polarity'] < 0
     negative_reviews = data[condition]
 
+    condition_neutral = data['Polarity'] == 0
+    neutral_reviews = data[condition_neutral]
+
     total_reviews = len(data)
     positive_percentage = len(positive_reviews) / total_reviews * 100
     negative_percentage = len(negative_reviews) / total_reviews * 100
+    neutral_percentage = len(neutral_reviews) / total_reviews * 100
+
 
     # Assuming positive_percentage and negative_percentage are float values
     positive_percentage_rounded = round(positive_percentage)
     negative_percentage_rounded = round(negative_percentage)
+    neutral_percentage_rounded = round(neutral_percentage)
+
 
     return {"positive":positive_percentage_rounded,
-            "negative":negative_percentage_rounded}
+            "negative":negative_percentage_rounded,
+            "neutral": neutral_percentage_rounded}
 
 
 # def get_positive_negative_words(data):
@@ -182,3 +190,11 @@ def get_positive_negative_words(data):
         "positive_words": positive_words,
         "negative_words": negative_words
     }
+
+def get_tone_of_conversation(positive_percentage, negative_percentage, neutral_percentage):
+    if positive_percentage > 50:
+        return "Positive"
+    elif negative_percentage > 50:
+        return "Negative"
+    else:
+        return "Neutral"
