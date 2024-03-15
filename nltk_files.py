@@ -200,3 +200,35 @@ def get_tone_of_conversation(positive_percentage, negative_percentage, neutral_p
         return "Negative"
     else:
         return "Neutral"
+
+def convert_the_text(text):
+    try:
+        # Split the text into lines
+        lines = text.split('\n')  # Decode bytes to strings
+
+        # Create a DataFrame with the 'review' column
+        df = pd.DataFrame({'review': lines})
+
+        # Split the paragraphs into sentences
+        df['review'] = df['review'].str.split(r'[.!?]')
+
+        # Explode the sentences into separate rows
+        df = df.explode('review')
+
+        # Reset the index
+        df = df.reset_index(drop=True)
+
+        # Convert the 'review' column to strings
+        df['review'] = df['review'].astype(str)
+
+        # Calculate polarity and sentiment analysis
+        df['Polarity'] = df['review'].apply(getPolarity)
+        df['Analysis'] = df['Polarity'].apply(analysis)
+
+        return df
+
+    except Exception as e:
+        # If any error occurs during file processing, print the error and return None
+        print(f"Error occurred: {e}")
+        return None
+
